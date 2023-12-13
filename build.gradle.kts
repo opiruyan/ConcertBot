@@ -11,3 +11,11 @@ tasks.jar {
         attributes["Main-Class"] = "Main"
     }
 }
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("io.github.cdimascio:dotenv-java:3.0.0")
+}
