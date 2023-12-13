@@ -18,4 +18,5 @@ repositories {
 
 dependencies {
     implementation("io.github.cdimascio:dotenv-java:3.0.0")
+    implementation("org.telegram:telegrambots:6.0.1")
 }
