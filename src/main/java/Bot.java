@@ -14,7 +14,7 @@ public class Bot extends TelegramLongPollingBot {
 
   @Override
   public String getBotToken() {
-      Dotenv dotenv = Dotenv.configure().load();
+      Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
       return dotenv.get("BOT_TOKEN");
   }
 
