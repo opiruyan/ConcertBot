@@ -21,6 +21,10 @@ dependencies {
     implementation("org.telegram:telegrambots:6.0.1")
 }
 
+tasks.build {
+    dependsOn("fatJar")
+}
+
 tasks.register<Jar>("fatJar") {
     group = "Custom Tasks"
     description = "Create a single JAR with all dependencies"
