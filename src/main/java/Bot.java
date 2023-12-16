@@ -1,3 +1,4 @@
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,33 +30,46 @@ public class Bot extends TelegramLongPollingBot {
       var user = msg.getFrom();
 
       var id = user.getId();
-      sendText(id, msg.getText());
+
+      try {
+        sendText(id, msg.getText());
+    } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
+    }
   }
 
-  public void sendText(Long who, String what) {
-      conversations.compute(who, (k, v) -> v == null ? 0 : v + 1);
+  public void sendText(Long who, String what) throws UnsupportedEncodingException {
+      conversations.compute(who, (k, v) -> v == null ? 0 : v + 1 );
 
-      String text = choseText(conversations.get(who));      
+      String text = choseText(conversations.get(who));
+      String value = encodeRussianString(text);
       SendMessage sm = SendMessage.builder()
                        .chatId(who.toString()) 
-                       .text(text).build();    
+                       .text(value).build();    
       try {
           execute(sm);                        
       } catch (TelegramApiException e) {
           throw new RuntimeException(e);
       }
+
+      conversations.remove(who, 3);
   }
 
-  public String choseText(Integer messageNumber) {
+  private String encodeRussianString(String text) throws UnsupportedEncodingException {
+      byte bytes[] = text.getBytes("UTF-8"); 
+      return new String(bytes, "UTF-8");
+  }
+
+  private String choseText(Integer messageNumber) {
       String text = "Или как написал копайлот:" +"\n" +"Я уверен, что твое нежелание программировать связано с" +
                     "тем, что ты не знаешь, как это делать." + 
                     " Но это не проблема, ведь я могу тебе помочь!";
       String text2 = "Я уверен, что твое нежелание программировать связано с работой в предыдущих проектах," +
-                     "где удовольствие и интерес от создания были убиты неправильно выбранными размерами и сложностью задач"
-                     + "А так же оторавностью от проблем бищнеса";
+                     "где удовольствие и интерес от создания были убиты неправильно выбранными размерами и сложностью задач."
+                     + " А так же оторванностью от проблем бизнеса";
       String text3 = "Как следствие, дофаминовая связь между удовольствием и программированием была нарушена." +
                      " А вместе с ней и мотивация.";
-      String text4 = "На сейчас всё. Мне больше нечего тебе сказать";   
+      String text4 = "На сейчас всё. Мне больше нечего тебе сказать";
       switch (messageNumber) {
         case 0:
             return text2;
