@@ -42,10 +42,10 @@ public class Bot extends TelegramLongPollingBot {
       conversations.compute(who, (k, v) -> v == null ? 0 : v + 1 );
 
       String text = choseText(conversations.get(who));
-      String value = encodeRussianString(text);
+
       SendMessage sm = SendMessage.builder()
                        .chatId(who.toString()) 
-                       .text(value).build();    
+                       .text(text).build();    
       try {
           execute(sm);                        
       } catch (TelegramApiException e) {
@@ -53,11 +53,6 @@ public class Bot extends TelegramLongPollingBot {
       }
 
       conversations.remove(who, 3);
-  }
-
-  private String encodeRussianString(String text) throws UnsupportedEncodingException {
-      byte bytes[] = text.getBytes("UTF-8"); 
-      return new String(bytes, "UTF-8");
   }
 
   private String choseText(Integer messageNumber) {

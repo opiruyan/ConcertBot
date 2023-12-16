@@ -47,3 +47,14 @@ tasks.register<Jar>("fatJar") {
         println("Successfully created fat jar")
     }
 }
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
+}
+
+tasks.withType<JavaExec> {
+    environment("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8")
+}
+tasks.withType<Test> {
+    environment("JAVA_TOOL_OPTIONS", "-Dfile.encoding=UTF-8")
+}
